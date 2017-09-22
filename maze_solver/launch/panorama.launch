@@ -1,0 +1,24 @@
+<launch>
+  <!-- 3d sensor; we just need RGB images -->
+  <include file="$(find turtlebot_bringup)/launch/3dsensor.launch">
+    <arg name="rgb_processing"                  value="true"/>
+    <arg name="ir_processing"                   value="false"/>
+    <arg name="depth_processing"                value="false"/>
+    <arg name="depth_registered_processing"     value="false"/>
+    <arg name="depth_registration"              value="false"/>
+    <arg name="disparity_processing"            value="false"/>
+    <arg name="disparity_registered_processing" value="false"/>
+    <arg name="scan_processing"                 value="false"/>
+  </include>
+
+  <node name="image_processing" pkg="maze_solver" type="image_server.py"/>
+  
+  <node name="maze_solver" pkg="maze_solver" type="maze_solver.py">
+    <param name="default_mode" value="1"/>
+    <param name="default_rotation_velocity" value="0.3"/>
+    <param name="camera_name" value="camera/rgb"/>
+    <remap from="cmd_vel" to="/cmd_vel_mux/input/navi"/>
+    <remap from="odom" to="/odom"/>
+    <remap from="clock" to="/clock"/>
+  </node>
+</launch>
